@@ -1,0 +1,44 @@
+{% extends 'homeapp/base.html' %}
+{% load static %}
+
+
+{% block nav_block %}
+
+<div class='container'><br><br><br>
+    <div class='jumbotron m-auto col-lg-6 ' >
+        <div class="row ml-5 mt-0">
+            <img style="height: 100px;" class="rounded-circle" src="{{product.product.imageUrl}}" alt="product Image">
+            <div class="mt-2 ml-3">
+                <h3>Order: {{product.product.name}}</h3>
+                <h6>Quantity: {{product.quantity}}</h6>
+                <h6>Price: Rs. {{product.product.price}}</h6><hr>
+                <h6>Total Price: Rs. {{product.product.price}}</h6>
+
+            </div>
+        </div>
+        <form action="{% url 'homeapp:order' pslug=product.id %}" method="POST">
+            {% csrf_token %}
+           
+            <div class="form-group">
+                <label for="address">Address</label>
+                <input type="text" name="address" id="address" class="form-control" placeholder="" aria-describedby="helpId">
+            </div>
+            <div class="form-group">
+                <label for="phone">Phone</label>
+                <input type="text" name="phone" id="phone" value="{{request.session.contact}}" class="form-control" placeholder="" aria-describedby="helpId">
+            </div>
+            <div class="form-group">
+              
+                <label for="urgent">Urgent delivery</label>
+                <input type="checkbox" name="urgent" id="urgent" value="True" placeholder="" aria-describedby="helpId"><br>
+                <small id="helpId" class="text-muted">Delivery within 2-3 hour with extra shipping charge (inside valley only)</small>
+            </div><br>
+            <input type="submit" value="Confirm Order" class="btn btn-info col-lg-3 float-left">
+            <a href="{% url 'homeapp:cart' %}"><button type="button" class="btn btn-warning float-right">Cancel</button></a>
+          </form>
+    </div>
+
+</div>
+
+
+{% endblock %}

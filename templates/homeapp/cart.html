@@ -1,0 +1,81 @@
+{% extends 'homeapp/base.html' %}
+{% load static %}
+{% block nav_block %}
+<div class="container">
+    <div class='border rounded p-4 m-4'>
+            <p class="display-4">🛒Your cart: </p>
+            {% if request.session.user_id %}
+                <a href="{% url 'homeapp:orderlist' %}"><button class="btn btn-primary float-right mb-2 mt-1" ><i class="fa fa-check-circle"></i>   Your Orders</button></a>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>S.N.</th>
+                            <th>Image</th>
+                            <th>Product</th>
+                            <th>Price</th>
+                            <th>Quantity</th>
+                            <th>Total</th>
+                            <th> </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for product in products %}
+                        <tr>
+                            <td>{{forloop.counter}}.</td>
+                            <td><img style="height: 70px;" class="rounded-circle" src="{{product.product.imageUrl}}" alt="product Image"></td>
+                            <td>{{product.product.name}}</td>
+                            <td>Rs. {{product.product.price}}</td>
+                            <td>{{product.quantity}}</td>
+                            <td>Rs. {{product.quantity}}</td>
+                            <td>
+                                <div class="m-1 p-1">
+                                    <a href="{% url 'homeapp:order' pslug=product.product.id %}"  class="btn btn-outline-info border rounded btn-sm ">Order now</a>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                    <tfoot>
+                        <!-- <tr>
+                            <th colspan="5">Total</th>
+                        </tr> -->
+                    </tfoot>
+                </table>
+        
+        
+     <!-- Modal -->
+     <div class="modal fade" id="modelId" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                    <div class="modal-header ">
+                            <h3 class="text-center">Login or Signin first!</h3>
+                    </div>
+                <div class="modal-body text-center">
+                    <div class="container-fluid">
+                        <a href="{% url 'login' %}"><button type="button" class="btn btn-success ">Login</button></a>
+                        <a href="{% url 'signup' %}"><button type="button" class="btn btn-primary  ml-5  ">Sign in</button></a>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+             
+        {% else %}
+        <br><br>
+        <h3 class="text-center">{{msg1}}</h3>
+        {% endif %}
+
+    </div>
+
+
+</div>
+{% endblock %}
+{% block foot_block %}
+{% endblock %}
+
+

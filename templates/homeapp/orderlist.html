@@ -1,0 +1,54 @@
+{% extends 'homeapp/base.html' %}
+{% load static %}
+
+
+{% block nav_block %}
+
+<div class="container">
+    <div class='border rounded p-4 m-4'>
+        <a class='btn btn-outline-dark btn-sm' href="{% url 'homeapp:homepage' %}">&#x2190; Continue Shopping</a><br><br>
+        <p class="display-4">Your orders: </p>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>S.N.</th>
+                    <th>Image</th>
+                    <th>Product</th>
+                    <th>Ordered Date</th>
+                    <th>Urgent Status</th>
+                    <th>Price</th>
+                    <th>Quantity</th>
+                    <th>Total Price</th>
+                    <th>Status</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in orders %}
+                <tr>
+                    <td>{{forloop.counter}}.</td>
+                    <td><img style="height: 70px;" class="rounded-circle" src="{{order.product.imageUrl}}" alt="product Image"></td>
+                    <td>{{order.product.name}}</td>
+                    <td>{{order.date}}</td>
+                    {% if order.urgentstatus %}
+                    <td style="text-align: center;"><small class="badge badge-success">yes</small></td>
+                    {% else %}
+                    <td style="text-align: center;"><small class="badge badge-info">no</small></td>
+                    {% endif %}
+                    <td>{{order.price}}</td>
+                    <td style="text-align: center;">{{order.quantity}}</td>
+                    <td style="text-align: center;">Rs. {{order.price}}</td>
+                    {% if order.status %}
+                    <td><small class="badge badge-success">Delivered</small></td>
+                    {% else %}
+                    <td><small class="badge badge-warning">Not Delivered</small></td>
+                    {% endif %}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+    </div>
+</div>
+
+{% endblock %}
