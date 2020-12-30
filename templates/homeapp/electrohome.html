@@ -3,38 +3,39 @@
 
 
 {% block nav_block %}
-<link rel="stylesheet" href="{% static 'homeapp/css/cloth_home.css'%}">
-<link rel="stylesheet" href="{% static 'homeapp/css/cloth_home.css'%}">
+<link rel="stylesheet" href="{% static 'homeapp/css/electrohome.css'%}">
 <br><br>
 <h1 class='container' >Electronics: </h1>
 <br>
 <div class='container'>
     <div class='row'>
         {% for product in products %}
-        <div class='col-lg-2 col-md-4 col-sm-4 col-xs-6'>
-            <div class="card" >
+        <div class='col-lg-2 col-md-4 col-sm-4 col-6'>
+            <div class="card border-light mb-3" >
+               <div class="okay">
                 <div id="carouselExampleSlidesOnly" class="carousel slide" data-ride="carousel">
-                    <div class="carousel-inner">
-                      <div class="carousel-item active">
-                        <a href="{% url 'homeapp:product' slug=product.id %}">
-                          <img id='img1' class="d-block w-100" src="{{product.imageUrl}}" alt="First slide">
-                        </a>
-                      </div>
-                      <div class="carousel-item">
-                        <a href="{% url 'homeapp:product' slug=product.id %}">
-                          <img id='img2' class="d-block w-100" src="{{product.image1Url}}" alt="Second slide">
-                        </a>
-                      </div>
-                      <div class="carousel-item">
-                        <a href="{% url 'homeapp:product' slug=product.id %}">
-                          <img id='img3' class="d-block w-100" src="{{product.image2Url}}" alt="Third slide">
-                        </a>
-                      </div>
+                  <div class="carousel-inner">
+                    <div class="carousel-item active">
+                      <a href="{% url 'homeapp:product' slug=product.id %}">
+                        <img id='img1' class="d-block w-100" src="{{product.imageUrl}}" alt="First slide">
+                      </a>
                     </div>
-                </div>
-                <div class="card-body">
-                  <h3 class="text-center">{{product.sub_category}}</h3>
-                </div>
+                    <div class="carousel-item">
+                      <a href="{% url 'homeapp:product' slug=product.id %}">
+                        <img id='img2' class="d-block w-100" src="{{product.image1Url}}" alt="Second slide">
+                      </a>
+                    </div>
+                    <div class="carousel-item">
+                      <a href="{% url 'homeapp:product' slug=product.id %}">
+                        <img id='img3' class="d-block w-100" src="{{product.image2Url}}" alt="Third slide">
+                      </a>
+                    </div>
+                  </div>
+              </div>
+              <div class="card-body">
+                <h3 class="text-center">{{product.sub_category}}</h3>
+              </div>
+               </div>
               </div>
         </div>
         {% endfor %}

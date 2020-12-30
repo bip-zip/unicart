@@ -1,0 +1,428 @@
+{% extends 'homeapp/base.html' %}
+{% load static %}
+{% load cart %}
+
+
+{% block nav_block %}
+<link rel="stylesheet" href="{% static 'homeapp/css/index.css' %}" type="text/css">
+
+
+<div class="container">
+    <div>
+        <br>
+        <div class='row'>
+            {% comment %} {% for product in advertise %} {% endcomment %}
+            <div class='col-lg-6 col-md-6 col-sm-6 col-xs-6 m-auto'>
+                <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
+                    <div class="carousel-inner">
+                        <div class="carousel-item active">
+                            <a href="#">
+                                <img class="d-block w-100"
+                                    src="https://base.imgix.net/files/base/ebm/powerelectronics/image/2019/03/powerelectronics_6186_fcc_wireless_items_to_charge.png?auto=format&fit=max&w=1200"
+                                    alt="First slide">
+                            </a>
+                        </div>
+                        <div class="carousel-item">
+                            <a href="#">
+                                <img class="d-block w-100"
+                                    src="https://base.imgix.net/files/base/ebm/powerelectronics/image/2019/03/powerelectronics_6186_fcc_wireless_items_to_charge.png?auto=format&fit=max&w=1200"
+                                    alt="First slide">
+                            </a>
+                        </div>
+                        <div class="carousel-item ">
+                            <a href="#">
+                                <img class="d-block w-100"
+                                    src="https://base.imgix.net/files/base/ebm/powerelectronics/image/2019/03/powerelectronics_6186_fcc_wireless_items_to_charge.png?auto=format&fit=max&w=1200"
+                                    alt="First slide">
+                            </a>
+                        </div>
+                    </div>
+                    <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="sr-only">Previous</span>
+                    </a>
+                    <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="sr-only">Next</span>
+                    </a>
+                </div>
+
+            </div>
+
+        </div>
+        {% comment %} {% endfor %} {% endcomment %}
+    </div>
+    <hr>
+    <h3>New Arrivals</h3>
+    <hr>
+    <div id="demo" class="carousel slide my-3" data-ride="carousel">
+        <ul class="carousel-indicators">
+            <li data-target="#demo" data-slide-to="0" class="active"></li>
+
+            {% for i in range %}
+            <li data-target="#demo" data-slide-to={{i}}></li>
+            {% endfor %}
+        </ul>
+
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <div class="row">
+                    <div class='col-sm-4 col-xl-2 col-lg-2 col-md-3 col-6' id=''>
+                        <div class="square ">
+                            <div class="card">
+                                <img class='offer' src="" alt="Card image cap">
+                                <h6 class='offpercent'></h6>
+                                <a href="">
+
+                                    <img class="card-img-top" src="" alt="Card image cap">
+                                </a>
+                                <div class="card-body">
+                                    <h6 class="card-title"></h6>
+                                    <!-- <h6 class="card-subtitle" id='price'> <del>Rs: {{product.crossprice}}</del></h6> -->
+                                    <h6 class="card-subtitle"> </h6>
+                                    <form class='text-left' action='' method="POST">
+                                        {% csrf_token %}
+                                        <input hidden type="text" name='data' value="{{product.pslug}}">
+                                        <div class="left">
+                                            <button type="submit" class='btn btn-outline-primary btn-sm'><i
+                                                    class="fa fa-cart-plus" aria-hidden="true"></i></button>
+                                        </div>
+                                    </form>
+                                    <div class="right">
+                                        <a href="" class="card-link"><button
+                                                class='btn btn-outline-primary btn-sm'>Detail...</button></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="carousel-item">
+                <div class="row">
+                    {% for product in products %}
+                    <div class='col-sm-4 col-xl-2 col-lg-2 col-md-3 col-6' id='{{product.pslug}}'>
+                        <div class="square ">
+                            <div class="card">
+                                <img class='offer' src="{% static 'homeapp/pics/badge.png' %}" alt="Card image cap">
+                                <h6 class='offpercent'>{{product.offpercent}}% off</h6>
+                                <a href="{% url 'homeapp:prodetail' pslug=product.pslug %}">
+
+                                    <img class="card-img-top" src="{{ product.imageUrl }}" alt="Card image cap">
+                                </a>
+                                <div class="card-body">
+                                    <h6 class="card-title">{{product.name}}</h6>
+                                    <!-- <h6 class="card-subtitle" id='price'> <del>Rs: {{product.crossprice}}</del></h6> -->
+                                    <h6 class="card-subtitle"> Rs: {{product.price}}</h6>
+
+
+                                    {% if not product|is_in_cart:request.session.cart %}
+                                    <form class='text-left' action='' method="POST">
+                                        {% csrf_token %}
+                                        <input hidden type="text" name='data' value="{{product.pslug}}">
+                                        <div class="left">
+                                            <button type="submit" class='btn btn-outline-primary btn-sm'><i
+                                                    class="fa fa-cart-plus" aria-hidden="true"></i></button>
+                                        </div>
+                                    </form>
+                                    {% else %}
+                                    <form class='text-left' action="" method="POST">
+                                        {% csrf_token %}
+                                        <input hidden type="text" name='data' value="{{product.pslug}}">
+                                        <input hidden type="text" name='remove' value="True">
+
+                                        <div class="left">
+
+                                            <button type="submit" class='btn btn-primary btn-sm'><i
+                                                    class="fa fa-check-square" aria-hidden="true"></i></button>
+                                        </div>
+                                    </form>
+                                    {% endif %}
+
+                                    <div class="right">
+                                        <a href="{% url 'homeapp:prodetail' pslug=product.pslug %}"
+                                            class="card-link"><button
+                                                class='btn btn-outline-primary btn-sm'>Detail...</button></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    {% endfor %}
+
+
+                </div>
+            </div>
+            <div class="carousel-item active">
+                <div class="row">
+                    {% for product in products %}
+                    <div class='col-sm-4 col-xl-2 col-lg-2 col-md-3 col-6' id='{{product.pslug}}'>
+                        <div class="square ">
+                            <div class="card">
+                                <img class='offer' src="{% static 'homeapp/pics/badge.png' %}" alt="Card image cap">
+                                <h6 class='offpercent'>{{product.offpercent}}% off</h6>
+                                <a href="{% url 'homeapp:prodetail' pslug=product.pslug %}">
+
+                                    <img class="card-img-top" src="{{ product.imageUrl }}" alt="Card image cap">
+                                </a>
+                                <div class="card-body">
+                                    <h6 class="card-title">{{product.name}}</h6>
+                                    <!-- <h6 class="card-subtitle" id='price'> <del>Rs: {{product.crossprice}}</del></h6> -->
+                                    <h6 class="card-subtitle"> Rs: {{product.price}}</h6>
+
+
+                                    {% if not product|is_in_cart:request.session.cart %}
+                                    <form class='text-left' action='' method="POST">
+                                        {% csrf_token %}
+                                        <input hidden type="text" name='data' value="{{product.pslug}}">
+                                        <div class="left">
+                                            <button type="submit" class='btn btn-outline-primary btn-sm'><i
+                                                    class="fa fa-cart-plus" aria-hidden="true"></i></button>
+                                        </div>
+                                    </form>
+                                    {% else %}
+                                    <form class='text-left' action="" method="POST">
+                                        {% csrf_token %}
+                                        <input hidden type="text" name='data' value="{{product.pslug}}">
+                                        <input hidden type="text" name='remove' value="True">
+
+                                        <div class="left">
+
+                                            <button type="submit" class='btn btn-primary btn-sm'><i
+                                                    class="fa fa-check-square" aria-hidden="true"></i></button>
+                                        </div>
+                                    </form>
+                                    {% endif %}
+
+                                    <div class="right">
+                                        <a href="{% url 'homeapp:prodetail' pslug=product.pslug %}"
+                                            class="card-link"><button
+                                                class='btn btn-outline-primary btn-sm'>Detail...</button></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    {% endfor %}
+
+
+                </div>
+            </div>
+
+        </div>
+
+
+        <a class="carousel-control-prev " href="#demo" role="button" data-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="sr-only">Previous</span>
+        </a>
+        <a class="carousel-control-next" href="#demo" role="button" data-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="sr-only">Next</span>
+        </a>
+    </div>
+
+
+
+    <hr>
+    <h3>Stock Clearance</h3>
+    <hr>
+    <div id="memo" class="carousel slide my-3" data-ride="carousel">
+        <ul class="carousel-indicators">
+            <li data-target="#memo" data-slide-to="0" class="active"></li>
+            <li data-target="#memo" data-slide-to="1"></li>
+            <li data-target="#memo" data-slide-to="2"></li>
+        </ul>
+
+        <div class="carousel-inner">
+            <div class="carousel-item">
+                <div class="row">
+                    {% for product in products %}
+                    <div class='col-sm-4 col-xl-2 col-lg-2 col-md-3 col-6' id='{{product.pslug}}'>
+                        <div class="square ">
+                            <div class="card">
+                                <img class='offer' src="{% static 'homeapp/pics/badge.png' %}" alt="Card image cap">
+                                <h6 class='offpercent'>{{product.offpercent}}% off</h6>
+                                <a href="{% url 'homeapp:prodetail' pslug=product.pslug %}">
+
+                                    <img class="card-img-top" src="{{ product.imageUrl }}" alt="Card image cap">
+                                </a>
+                                <div class="card-body">
+                                    <h6 class="card-title">{{product.name}}</h6>
+                                    <!-- <h6 class="card-subtitle" id='price'> <del>Rs: {{product.crossprice}}</del></h6> -->
+                                    <h6 class="card-subtitle"> Rs: {{product.price}}</h6>
+
+
+                                    {% if not product|is_in_cart:request.session.cart %}
+                                    <form class='text-left' action='' method="POST">
+                                        {% csrf_token %}
+                                        <input hidden type="text" name='data' value="{{product.pslug}}">
+                                        <div class="left">
+                                            <button type="submit" class='btn btn-outline-primary btn-sm'><i
+                                                    class="fa fa-cart-plus" aria-hidden="true"></i></button>
+                                        </div>
+                                    </form>
+                                    {% else %}
+                                    <form class='text-left' action="" method="POST">
+                                        {% csrf_token %}
+                                        <input hidden type="text" name='data' value="{{product.pslug}}">
+                                        <input hidden type="text" name='remove' value="True">
+
+                                        <div class="left">
+
+                                            <button type="submit" class='btn btn-primary btn-sm'><i
+                                                    class="fa fa-check-square" aria-hidden="true"></i></button>
+                                        </div>
+                                    </form>
+                                    {% endif %}
+
+                                    <div class="right">
+                                        <a href="{% url 'homeapp:prodetail' pslug=product.pslug %}"
+                                            class="card-link"><button
+                                                class='btn btn-outline-primary btn-sm'>Detail...</button></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    {% endfor %}
+
+
+                </div>
+            </div>
+            <div class="carousel-item">
+                <div class="row">
+                    {% for product in products %}
+                    <div class='col-sm-4 col-xl-2 col-lg-2 col-md-3 col-6' id='{{product.pslug}}'>
+                        <div class="square ">
+                            <div class="card">
+                                <img class='offer' src="{% static 'homeapp/pics/badge.png' %}" alt="Card image cap">
+                                <h6 class='offpercent'>{{product.offpercent}}% off</h6>
+                                <a href="{% url 'homeapp:prodetail' pslug=product.pslug %}">
+
+                                    <img class="card-img-top" src="{{ product.imageUrl }}" alt="Card image cap">
+                                </a>
+                                <div class="card-body">
+                                    <h6 class="card-title">{{product.name}}</h6>
+                                    <!-- <h6 class="card-subtitle" id='price'> <del>Rs: {{product.crossprice}}</del></h6> -->
+                                    <h6 class="card-subtitle"> Rs: {{product.price}}</h6>
+
+
+                                    {% if not product|is_in_cart:request.session.cart %}
+                                    <form class='text-left' action='' method="POST">
+                                        {% csrf_token %}
+                                        <input hidden type="text" name='data' value="{{product.pslug}}">
+                                        <div class="left">
+                                            <button type="submit" class='btn btn-outline-primary btn-sm'><i
+                                                    class="fa fa-cart-plus" aria-hidden="true"></i></button>
+                                        </div>
+                                    </form>
+                                    {% else %}
+                                    <form class='text-left' action="" method="POST">
+                                        {% csrf_token %}
+                                        <input hidden type="text" name='data' value="{{product.pslug}}">
+                                        <input hidden type="text" name='remove' value="True">
+
+                                        <div class="left">
+
+                                            <button type="submit" class='btn btn-primary btn-sm'><i
+                                                    class="fa fa-check-square" aria-hidden="true"></i></button>
+                                        </div>
+                                    </form>
+                                    {% endif %}
+
+                                    <div class="right">
+                                        <a href="{% url 'homeapp:prodetail' pslug=product.pslug %}"
+                                            class="card-link"><button
+                                                class='btn btn-outline-primary btn-sm'>Detail...</button></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    {% endfor %}
+
+
+                </div>
+            </div>
+            <div class="carousel-item active">
+                <div class="row">
+                    {% for product in products %}
+                    <div class='col-sm-4 col-xl-2 col-lg-2 col-md-3 col-6' id='{{product.pslug}}'>
+                        <div class="square ">
+                            <div class="card">
+                                <img class='offer' src="{% static 'homeapp/pics/badge.png' %}" alt="Card image cap">
+                                <h6 class='offpercent'>{{product.offpercent}}% off</h6>
+                                <a href="{% url 'homeapp:prodetail' pslug=product.pslug %}">
+
+                                    <img class="card-img-top" src="{{ product.imageUrl }}" alt="Card image cap">
+                                </a>
+                                <div class="card-body">
+                                    <h6 class="card-title">{{product.name}}</h6>
+                                    <!-- <h6 class="card-subtitle" id='price'> <del>Rs: {{product.crossprice}}</del></h6> -->
+                                    <h6 class="card-subtitle"> Rs: {{product.price}}</h6>
+
+
+                                    {% if not product|is_in_cart:request.session.cart %}
+                                    <form class='text-left' action='' method="POST">
+                                        {% csrf_token %}
+                                        <input hidden type="text" name='data' value="{{product.pslug}}">
+                                        <div class="left">
+                                            <button type="submit" class='btn btn-outline-primary btn-sm'><i
+                                                    class="fa fa-cart-plus" aria-hidden="true"></i></button>
+                                        </div>
+                                    </form>
+                                    {% else %}
+                                    <form class='text-left' action="" method="POST">
+                                        {% csrf_token %}
+                                        <input hidden type="text" name='data' value="{{product.pslug}}">
+                                        <input hidden type="text" name='remove' value="True">
+
+                                        <div class="left">
+
+                                            <button type="submit" class='btn btn-primary btn-sm'><i
+                                                    class="fa fa-check-square" aria-hidden="true"></i></button>
+                                        </div>
+                                    </form>
+                                    {% endif %}
+
+                                    <div class="right">
+                                        <a href="{% url 'homeapp:prodetail' pslug=product.pslug %}"
+                                            class="card-link"><button
+                                                class='btn btn-outline-primary btn-sm'>Detail...</button></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    {% endfor %}
+
+
+                </div>
+            </div>
+
+        </div>
+
+
+        <a class="carousel-control-prev " href="#memo" role="button" data-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="sr-only">Previous</span>
+        </a>
+        <a class="carousel-control-next" href="#memo" role="button" data-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="sr-only">Next</span>
+        </a>
+    </div>
+
+    <hr>
+</div>
+
+</div>
+{% endblock %}
+{% block foot_block %}
+{% endblock %}

@@ -1,0 +1,30 @@
+th, td{
+    padding:20px;
+    font-size: clamp(16px, 2vw, 14px);
+}
+
+
+td img{
+    
+    height: 70px;
+}
+
+.display-4{
+    font-size: 60px;
+}
+
+
+
+@media only screen and (max-width: 1081px) {
+    td img {
+        height: 50px;
+    }
+    .display-4{
+        font-size: 40px;
+    }
+};
+
+
+
+
+

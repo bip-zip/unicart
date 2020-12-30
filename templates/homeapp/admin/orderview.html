@@ -1,0 +1,54 @@
+{% extends 'homeapp/admin/base_admin.html' %}
+{% load static %}
+
+{% block nav_block %}
+<div class="container">
+    <div class="row">
+        <div class="col-lg-6">
+            
+            <div class="border rounded p-4 m-4">
+                <h3>Customer Details:</h3><br>
+            <p><strong>Name: </strong>{{order.customer.firstname}} {{order.customer.lastname}}</p>
+            <p><strong>Email: </strong>{{order.customer.email}}</p>
+            <p><strong>Phone: </strong>{{order.phone}}</p>
+            <p><strong>Shipping Location: </strong>{{order.ship}}</p>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="border rounded p-4 m-4">
+                     <h3>Order #{{order.id}} Details:</h3><p><strong>Date: </strong>{{order.date}}</p><br>
+                     <p><strong>Product: </strong><a href="{% url 'homeapp:prodetail' pslug=order.product.pslug %}"> {{order.product.name}}</p></a>
+                     {% if order.size %}
+                     <p><strong>Size: </strong>{{order.size}}</p>
+                     {% endif %}
+                     {% if order.color %}
+                     <p><strong>Color: </strong>{{order.color}}</p>
+                     {% endif %}
+
+                     <p><strong>Price: </strong>Rs. {{order.product.price}}</p>
+                     <p><strong>Quantity: </strong>{{order.quantity}}</p><hr>
+                     <p><strong>Total Price: Rs. {{order.price}}/-</strong></p><hr>
+                     <p><strong>Urgent Status: </strong>{{order.urgentstatus}}</p>
+                     <p><strong>Payment via: </strong>{{order.payment_method}}</p>
+                     <p><strong>Payment Completed: </strong>{{order.payment_completed}}</p><hr>
+                     <div>
+                        {% if order.status %}
+                        <p><strong>Delivery: </strong><small class="badge badge-success">Done.</small></p>
+                        {% else %}
+                        <p><strong>Delivery: </strong><i class="badge badge-primary">On Process.</i></p>
+                        {% endif %}
+                    </div>
+                        <a href="{% url 'homeapp:changests' order.id %}?action={{order.status}}" class="btn btn-primary btn-sm">Change</a>
+                     
+            </div>
+        </div>
+
+    </div>
+    
+
+
+
+</div>
+
+
+{% endblock %}

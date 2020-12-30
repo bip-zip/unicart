@@ -1,0 +1,152 @@
+.card-img-top{
+    width: 158px;
+    height: 170px;
+    
+}
+
+.square{
+    width: 160px;
+    height: 240px;
+    margin-top: 18px;
+    margin-bottom: 66px;
+    
+}
+
+.square:hover{
+    box-shadow: hsl(0, 0%, 80%) 0 0 16px;
+    background-color: rgb(231, 231, 231);
+}
+
+.left{
+    position: relative;
+}
+
+h6.card-subtitle{
+    color: coral;
+    padding-bottom: 10%;
+}
+
+.right{
+    height: 10px;
+    position: relative;
+    bottom: 30px;
+    padding-left: 50%;
+}
+
+.offpercent{
+    position: absolute;
+    font-size: 12px;
+    margin-top: 162px;
+    margin-left: 115px;
+    color:#ffffffee;
+    
+ }
+
+.offer{
+    position: absolute;
+    height: 40px;
+    width: 60px;
+    margin-left: 100px;
+    margin-top:150px;
+    
+}
+
+
+.card-body {
+    -webkit-box-flex: 1;
+    -ms-flex: 1 1 auto;
+    flex: 1 1 auto;
+    padding: 1.25rem;
+    height: 122px;
+}
+
+
+body{
+    background-color: rgb(249, 250, 249) ;
+}
+/* 
+.carousel-item:hover{
+    transform:scale(1.1); }*/
+    
+    
+
+
+h2{
+    color: rgb(219, 17, 17);
+}
+
+
+.filter{
+    float: right;
+    position: sticky;
+    right: 100px;
+    top: -40px;
+}
+#img1{
+    height: 100px;
+    width: 100px;
+}
+.col-md-3 {
+    display: inline-block;
+    margin-left: 10px;
+}
+
+.col-md-3 {
+    width: 100%;
+    height: auto;
+}
+
+body .carousel-control-indicator li {
+    background-color: blue;
+}
+
+body .carousel-control-prev-icon body .carousel-control-next-icon {
+    background-color: blue;
+}
+
+
+body .no-padding {
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.carousel-control-prev-icon {
+    background: black no-repeat center center;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='%23fff' viewBox='0 0 8 8'%3e%3cpath d='M5.25 0l-4 4 4 4 1.5-1.5-2.5-2.5 2.5-2.5-1.5-1.5z'/%3e%3c/svg%3e");
+    margin-left: -270px;
+}
+
+.carousel-control-next-icon {
+    background: black no-repeat center center;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='%23fff' viewBox='0 0 8 8'%3e%3cpath d='M2.75 0l-1.5 1.5 2.5 2.5-2.5 2.5 1.5 1.5 4-4-4-4z'/%3e%3c/svg%3e");
+
+}
+
+body .carousel-indicators {
+    display: none;
+}
+
+.carousel-indicators .active {
+    display: none;
+}
+
+@media only screen and (max-width: 1081px) {
+    .square{
+        margin-left:30px
+        
+        
+    }
+};
+
+.carousel-inner a img,.carousel-inner carousel_item a img {
+    height: 1309px;
+    width: 2168px;
+
+}
+
+
+
+
+
+
+

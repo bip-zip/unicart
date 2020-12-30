@@ -10,9 +10,10 @@
 <div class='container'>
     <div class='row'>
         {% for product in products %}
-        <div class='col-lg-2 col-md-6 col-sm-6 col-xs-6'>
-            <div id='card' class="card border-light mb-3" >
-                <div id="carouselExampleSlidesOnly" class="carousel slide" data-ride="carousel">
+        <div class='col-lg-2 col-md-3 col-sm-4 col-6'>
+            <div class="card border-light mb-3" >
+                <div class="okay">
+                  <div id="carouselExampleSlidesOnly" class="carousel slide" data-ride="carousel">
                     <div class="carousel-inner">
                       <div class="carousel-item active">
                         <a href="{% url 'homeapp:product' slug=product.id %}">
@@ -33,6 +34,7 @@
                 </div>
                 <div class="card-body">
                   <h3 class="text-center">{{product.sub_category}}</h3>
+                </div>
                 </div>
               </div>
         </div>

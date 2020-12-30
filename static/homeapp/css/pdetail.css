@@ -110,12 +110,15 @@ body {
     border-radius: 2px; }
     .color:first-of-type {
       margin-left: 20px; }
+
   
   .add-to-cart, .like {
     background: #ff9f1a;
-    padding: 1.2em 1.5em;
+    margin-right:20px ;
+    padding: 15px;
     border: none;
     text-transform: UPPERCASE;
+    float: left;
     font-weight: bold;
     color: #fff;
     -webkit-transition: background .3s ease;
@@ -143,6 +146,7 @@ body {
   
   .tooltip-inner {
     padding: 1.3em; }
+    
   
   @-webkit-keyframes opacity {
     0% {

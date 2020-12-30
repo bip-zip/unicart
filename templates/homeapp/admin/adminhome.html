@@ -1,0 +1,71 @@
+{% extends 'homeapp/admin/base_admin.html' %}
+{% load static %}
+
+
+
+{% block nav_block %}
+<link rel="stylesheet" href="{% static 'homeapp/css/admin.css'%}">
+<div class="container">
+    <div class="row">
+        <div class="col-lg-6 col-md-12 col-sm-12 col-12 border rounded ">
+            <h2>Urgents: </h2>
+            <table class="table table-striped "">
+                <thead class=" thead-light">
+                <tr>
+                    <th>S.N.</th>
+                    <th>Product</th>
+                    <th>Customer</th>
+
+                    <th>Date</th>
+
+                </tr>
+                </thead>
+                <tbody>
+                    {% for order in urgents %}
+                    <tr>
+                        <td>{{forloop.counter}}.</td>
+                        <td><a href="{% url 'homeapp:adminorder' order.id %}">#{{order.id}}</a></td>
+                        <td class="text-center">{{order.customer}}</td>
+                        <td class="text-center">{{order.date}}</td>
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+            </table>
+        </div>
+
+        <div class="col-lg-6 col-md-12 col-sm-12 col-12 border rounded ">
+            <h2>Orders: </h2>
+            <table class="table table-hover"">
+            <thead class=" thead-dark">
+                <tr>
+                    <th>S.N.</th>
+                    <th>Product</th>
+                    <th>Customer</th>
+
+                    <th>Date</th>
+
+                </tr>
+                </thead>
+                <tbody>
+                    {% for order in orders %}
+                    <tr>
+                        <td>{{forloop.counter}}.</td>
+                        <td><a href="{% url 'homeapp:adminorder' order.id %}">#{{order.id}}</a></td>
+                        <td class="text-center">{{order.customer}}</td>
+                        <td class="text-center">{{order.date}}</td>
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+{% block foot_block %}
+{% endblock %}

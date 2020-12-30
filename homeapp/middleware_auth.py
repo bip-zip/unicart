@@ -5,7 +5,7 @@ def simple_middleware(get_response):
 
     def middleware(request):
         if not request.session.get('user_id'):
-            # return redirect('login')
+            return redirect('login')
             print('okay okay')
 
         response = get_response(request)

@@ -16,7 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path,include
 from homeapp import views
-from homeapp.views import Producty, SignUp, Login, OrderList, Index
+from homeapp.views import Producty, SignUp, Login, OrderList, Index, KhaltiRequestView, KhaltiVerifyView, CartManage, BuyNow, AdminLogin, AdminHome, AdminOrderView
 
 from django.conf.urls.static import static
 from django.conf import settings
@@ -32,6 +32,7 @@ urlpatterns = [
     path ('logout/', include('homeapp.urls')),
     path('cloth/', views.clothhome, name='clothhome'),
     path('cart/', views.cart, name='cart'),
+    path('manage-cart/<int:product_id>/', CartManage.as_view(), name='cartmanage'), 
     path ('search/', include('homeapp.urls')),
     path ('search/', include('homeapp.urls')),
     path ('search/search', include('homeapp.urls')),
@@ -39,7 +40,19 @@ urlpatterns = [
     path('product/',Producty.as_view() ,name='product'),
     path ('product-detail/', include('homeapp.urls')),
     path ('order/', include('homeapp.urls')),
+    path('buynow/<int:pslug>/',BuyNow.as_view() ,name='buynow'),
+
+    path('khalti-request/', KhaltiRequestView.as_view(), name='khaltirequest' ),
+    path('khalti-verify/', KhaltiVerifyView.as_view(), name='khaltiverify' ),
+
     path('orderlist/', simple_middleware(OrderList.as_view()), name='orderlist'),
+    path('adminlogin/', AdminLogin.as_view(), name='adminlogin' ),
+    path('adminhome/', AdminHome.as_view(), name='adminhome' ),
+    path('adminorder/<int:id>/', AdminOrderView.as_view(), name='adminorder' ),
+    path('changests/<int:id>/', views.changeStatus, name='changests'),
+
+
+
     
 ]
 
