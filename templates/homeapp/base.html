@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 {% load static %}
+{% load cart %}
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -50,7 +51,9 @@
               <a class="nav-link dropdown" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <p id='user'><i class="fa fa-user-circle" aria-hidden="true"></i>  <strong>{{request.session.username}}</strong></p>
               </a>
+              
               <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="{% url 'homeapp:userprofile' %}">Profile</a>
                 <a class="dropdown-item" href="{% url 'homeapp:logout' %}">Logout</a>
               </div>
             </li>
@@ -62,14 +65,20 @@
               <a class="nav-link" href="{% url 'homeapp:login' %}">Login</a>
             </li>
             {% endif %}
+           
             <li class="nav-item">
               <a class="nav-link" href="{% url 'homeapp:cart' %}"><i class="fa fa-shopping-cart fa-2x" aria-hidden="true"></i>
-              <span class="badge badge-info">0</span>
+                {% if request.session.user_id %}
+                <span class="badge badge-info">{{request.session.user_id|cartnumber}}</span>
+                {% else %}
+                <span class="badge badge-info">0</span>
+                {% endif %}
               </a>
             </li>
           </ul>
           <form class="form-inline my-2 my-lg-0" method="GET" action="search">
             <input class="form-control mr-sm-2" type="search" placeholder="Search products" aria-label="Search"  id='query' name='query'>
+            
             <button class="btn btn-primary my-2 my-sm-0" type="submit">Search</button>
           </form>
         </div>
@@ -84,10 +93,10 @@
     <div class="row">
       <div class="col-md-12 py-5">
         <div class="mb-5 flex-center">
-          <a class="fb-ic">
+          <a class="fb-ic" href="https://www.facebook.com/Yologuys-Nepal-103122431737249" target="_blank">
             <i class="fab fa-facebook-f fa-lg white-text mr-md-5 mr-3 fa-2x"> </i>
           </a>
-          <a class="ins-ic">
+          <a class="ins-ic"  href="https://www.facebook.com/Yologuys-Nepal-103122431737249" target="_blank">
             <i class="fab fa-instagram fa-lg white-text mr-md-5 mr-3 fa-2x"> </i>
           </a>
           <!-- Load Facebook SDK for JavaScript -->
@@ -110,13 +119,13 @@
           </script>
 
           <!-- Your Chat Plugin code -->
-          <!-- <div class="fb-customerchat"
+          <div class="fb-customerchat"
             attribution=setup_tool
             page_id="778828615637853"
             theme_color="#20cef5"
             logged_in_greeting="Hello !"
             logged_out_greeting="Hello !">
-          </div> -->
+          </div>
         </div>
       </div>
     </div>

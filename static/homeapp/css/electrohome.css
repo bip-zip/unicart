@@ -5,9 +5,16 @@
   height: 150px;
 }
 
-#card{
+.container .row .okay{
   width: auto;
   height: 16em;
+  
 }
+
+
+.okay:hover{
+  box-shadow: hsl(0, 0%, 80%) 0 0 16px;
+}
+
 
 

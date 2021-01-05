@@ -1,37 +1,8 @@
 {% extends 'homeapp/base.html' %}
 {% load static %}
+{% load cart %}
 {% block nav_block %}
-<style>
-    #photo{
-        width: 158px;
-        height: 170px;
-    }
-    #card{
-        width: auto;
-        height: 18em;
-    }
-
-    #card:hover{
-        
-        background-color:rgb(250, 245, 245);
-    }
-    
-    #left{
-        padding-left: 4%;
-    }
-
-    h6#price{
-        color: coral;
-        padding-bottom: 10%;
-    }
-
-    #right{
-        position: relative;
-        top: -30px;
-        padding-left: 48%;
-
-    }
-</style>
+<link rel="stylesheet" href="{% static 'homeapp/css/index.css' %}" type="text/css">
 
 <br>
 <div class='container'>
@@ -61,21 +32,36 @@
                     <img id="photo" class="card-img-top" src="{{ product.imageUrl }}" alt="Card image cap">
                 </a>
                 <div class="card-body">
-                    <h6 class="card-title">{{product.name}}</h6>
+                    <h6 class="card-title">{{product.name|truncatechars:13}}</h6>
                     <h6 class="card-subtitle" id='price'> Rs: {{product.price}}</h6>
-
-            
-                    
-                    <form class='text-left' action="" method="POST">
+    
+                    {% if not product|is_in_cart:request.session.cart %}
+                    <form class='text-left' action="/#{{product.pslug}}" method="POST">
                         {% csrf_token %}
                         <input hidden type="text" name='data' value="{{product.pslug}}">
-                        
-                        <button id='left' type="submit" class='btn btn-outline-primary btn-sm'><i class="fa fa-cart-plus" aria-hidden="true"></i></button>
+                        <div class="left">
+                            <button type="submit" class='btn btn-outline-primary btn-sm'><i class="fa fa-cart-plus"
+                                    aria-hidden="true"></i></button>
+                        </div>
                     </form>
-                    
-                    
-                    <a href="{% url 'homeapp:prodetail' pslug=product.pslug %}" id='right' class="card-link"><button class='btn btn-outline-primary btn-sm'>Detail...</button></a>
-                  </div>
+                    {% else %}
+                    <form class='text-left' action="/#{{product.pslug}}" method="POST">
+                        {% csrf_token %}
+                        <input hidden type="text" name='data' value="{{product.pslug}}">
+                        <div class="left">
+    
+                            <button type="submit" class='btn btn-primary btn-sm'><i class="fa fa-check-square"
+                                    aria-hidden="true"></i></button>
+                        </div>
+                    </form>
+                    {% endif %}
+    
+    
+                    <div class="right">
+                        <a href="{% url 'homeapp:prodetail' pslug=product.pslug %}" class="card-link"><button
+                                class='btn btn-outline-primary btn-sm'>Detail...</button></a>
+                    </div>
+                </div>
             </div>
         </div>
         {% endfor %}
@@ -84,7 +70,49 @@
         
         
     
-    {% endif %}
+    {% endif %}<br>
+    <div class="">
+        <nav aria-label="...">
+            <ul class="pagination">
+    
+    
+                {% if sproduct.has_previous %}
+                <li class="page-item ">
+                    <a class="page-link" href="?page={{ sproduct.previous_page_number }}" tabindex="-1">Previous</a>
+                </li>
+                {% else%}
+                <li class="page-item disabled">
+                    <a class="page-link" href="#" tabindex="-1">Previous</a>
+                </li>
+                {% endif %}
+    
+    
+    
+                {% for i in sproduct.paginator.page_range %}
+                {% if i == sproduct.number%}
+                <li class="page-item active"><a class="page-link">{{i}}</a></li>
+                {% else %}
+                <li class="page-item"><a class="page-link" href="?page={{i}}">{{i}}</a></li>
+                {% endif %}
+                {% endfor %}
+    
+                
+    
+                {% if products.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ sproduct.next_page_number }}">Next</a>
+                </li>
+                {% else %}
+                <li class="page-item disabled">
+                    <a class="page-link" href="#">Next</a>
+                </li>
+                {% endif %}
+    
+    
+            </ul>
+        </nav>
+    </div>
+</div>
 </div>
 
 {% endblock %}

@@ -3,12 +3,12 @@
 
 
 {% block nav_block %}
-
+<link rel="stylesheet" href="{% static 'homeapp/css/cart.css' %}" type="text/css">
 <div class="container">
     <div class='border rounded p-4 m-4'>
         <a class='btn btn-outline-dark btn-sm' href="{% url 'homeapp:homepage' %}">&#x2190; Continue Shopping</a><br><br>
-        <p class="display-4">Your orders: </p>
-        <table class="table">
+        <p class="display-4">✔ Your orders: </p>
+        <table class="table table-responsive">
             <thead>
                 <tr>
                     <th>S.N.</th>
@@ -19,6 +19,8 @@
                     <th>Price</th>
                     <th>Quantity</th>
                     <th>Total Price</th>
+                    <th>Payment</th>
+                    <th>Payment Status</th>
                     <th>Status</th>
                     <th></th>
                 </tr>
@@ -28,21 +30,33 @@
                 <tr>
                     <td>{{forloop.counter}}.</td>
                     <td><img style="height: 70px;" class="rounded-circle" src="{{order.product.imageUrl}}" alt="product Image"></td>
-                    <td>{{order.product.name}}</td>
+                    <td><a href="{% url 'homeapp:prodetail' pslug=order.product.pslug %}">{{order.product.name}}</a></td>
                     <td>{{order.date}}</td>
                     {% if order.urgentstatus %}
                     <td style="text-align: center;"><small class="badge badge-success">yes</small></td>
                     {% else %}
                     <td style="text-align: center;"><small class="badge badge-info">no</small></td>
                     {% endif %}
-                    <td>{{order.price}}</td>
+                    <td>{{order.product.price}}</td>
                     <td style="text-align: center;">{{order.quantity}}</td>
                     <td style="text-align: center;">Rs. {{order.price}}</td>
-                    {% if order.status %}
-                    <td><small class="badge badge-success">Delivered</small></td>
+                    <td style="text-align: center;">{{order.pmethod.pgateway}}</td>
+                    {% if order.payment_completed %}
+                    <td><small >✔</small></td>
                     {% else %}
-                    <td><small class="badge badge-warning">Not Delivered</small></td>
+                    <td><small >❌</small></td>
                     {% endif %}
+
+                    
+                    <td><small class="badge badge-success">{{order.orderstatus.status}}</small></td>
+                    {% if order.orderstatus.id == 4 %}
+                    <td><a href="{% url 'homeapp:cancelorder' order.id %}?action={{order.orderstatus.id}}" class="btn btn-primary btn-sm disabled">Cancel Order</a></td>
+                    {% elif not order.orderstatus.id == 5 %}
+                    <td><a href="{% url 'homeapp:cancelorder' order.id %}?action={{order.orderstatus.id}}" class="btn btn-primary btn-sm ">Cancel Order</a></td>
+                    {% else %}
+                    <td><a href="{% url 'homeapp:cancelorder' order.id %}?action={{order.orderstatus.id}}" class="btn btn-success btn-sm disabled">Cancelled</a></td>
+                    {% endif %}
+                    
                 </tr>
                 {% endfor %}
             </tbody>

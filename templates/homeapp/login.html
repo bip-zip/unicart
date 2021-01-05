@@ -5,7 +5,7 @@
 <div class="container">
     
     <div class="p-4 m-4">
-        <div class='col-lg-4 mx-auto border rounded pt-4 pb-2'>
+        <div class='col-lg-4 col-md-8 col-sm-12 mx-auto border rounded pt-4 pb-2 pr-5 pl-5'>
             <h4 class="alert alert-light">Login here</h4>
             <form action="" method="POST">
                 {% csrf_token %}
@@ -27,8 +27,17 @@
                 <div class="form-group">
                     <input type="submit" class='btn btn-sm btn-info col-lg-4' value="Login" required>
                 </div>
-                
             </form>
+            
+            <div class="row">
+                <div class="col-md-6">
+                    <a href="{% url 'homeapp:forgetpassword' %}">Forget password?</a>
+                </div>
+                <div class="col-md-6">
+                    <a href="{% url 'homeapp:signup' %}">Don't have an account?</a>
+                </div>
+
+            </div>
         </div>
 
     </div>

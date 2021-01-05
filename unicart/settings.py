@@ -52,7 +52,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'homeapp.middleware_auth.simple_middleware',
+    # 'homeapp.middleware_auth.simple_middleware',
 ]
 
 ROOT_URLCONF = 'unicart.urls'
@@ -82,7 +82,7 @@ WSGI_APPLICATION = 'unicart.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'dropship',
+        'NAME': 'yolo',
         'USER': 'root',
         'PASSWORD': '1234',
         'HOST': 'localhost'
@@ -114,7 +114,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Kathmandu'
 
 USE_I18N = True
 

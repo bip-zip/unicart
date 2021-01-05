@@ -1,0 +1,74 @@
+{% extends 'homeapp/base.html' %}
+{% load static %}
+{% load cart %}
+
+{% block nav_block %}
+<head>
+    <link rel="stylesheet" href="{% static 'homeapp/css/khalti.css'%}">
+    <script src="https://khalti.s3.ap-south-1.amazonaws.com/KPG/dist/2020.12.17.0.0.0/khalti-checkout.iffe.js"></script>
+</head>
+<body><br>
+    <div class="container" >
+        <div class='jumbotron'>
+            <div class="mx-auto mt-5 mb-5" ">
+                <img id='khaltilogo' src="{% static 'homeapp/pics/khalti.png' %}" alt="khaltilogo">
+                <div class="text-center">
+                    
+                    <h2>Your Total order amount is Rs.{{order.price}}</h2><hr><br>
+                    <button class="btn btn-success btn-lg"  id="payment-button">Continue payment with Khalti</button>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    
+    <script>
+        var config = {
+            // replace the publicKey with yours
+            "publicKey": "test_public_key_c5c63915be0a49578162fb662045fab5",
+            "productIdentity": "order{{order.id}}",
+            "productName": "order{{order.id}}",
+            "productUrl": "http://localhost:8000",
+            "paymentPreference": [
+                "KHALTI",
+                "EBANKING",
+                "MOBILE_BANKING",
+                "CONNECT_IPS",
+                "SCT",
+                ],
+            "eventHandler": {
+                onSuccess (payload) {
+                    // hit merchant api for initiating verfication
+                    axios.get('/khalti-verify/',{
+                        params:{
+                            'token':payload.token,
+                            'amount': payload.amount,
+                            'order':"{{order.id}}"
+
+                        } 
+                    }).then(function(resp){
+                        console.log(resp.data)
+                    })
+                    console.log(payload);
+                },
+                onError (error) {
+                    console.log(error);
+                },
+                onClose () {
+                    console.log('widget is closing');
+                }
+            }
+        };
+
+        var checkout = new KhaltiCheckout(config);
+        var btn = document.getElementById("payment-button");
+        btn.onclick = function () {
+            // minimum transaction amount must be 10, i.e 1000 in paisa.
+            checkout.show({amount: {{order.price}}*100});
+        }
+    </script>
+    <!-- Paste this code anywhere in you body tag -->
+
+</body>
+{% endblock  %}

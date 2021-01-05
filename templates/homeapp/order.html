@@ -2,6 +2,8 @@
 {% load static %}
 
 
+{% load cart %}
+
 {% block nav_block %}
 
 <div class='container'><br><br><br>
@@ -12,7 +14,7 @@
                 <h3>Order: {{product.product.name}}</h3>
                 <h6>Quantity: {{product.quantity}}</h6>
                 <h6>Price: Rs. {{product.product.price}}</h6><hr>
-                <h6>Total Price: Rs. {{product.product.price}}</h6>
+                <h6>Total Price: Rs. {{product.totalprice}}</h6>
 
             </div>
         </div>
@@ -21,21 +23,48 @@
            
             <div class="form-group">
                 <label for="address">Address</label>
-                <input type="text" name="address" id="address" class="form-control" placeholder="" aria-describedby="helpId">
+                <input type="text" name="address" id="address" class="form-control" value='{{request.session.address}}' placeholder="" aria-describedby="helpId" required>
             </div>
             <div class="form-group">
                 <label for="phone">Phone</label>
-                <input type="text" name="phone" id="phone" value="{{request.session.contact}}" class="form-control" placeholder="" aria-describedby="helpId">
+                <input type="text" name="phone" id="phone" value="{{request.session.contact}}" class="form-control" placeholder="" aria-describedby="helpId" required>
             </div>
+            
+            {% if cat.category == 'Clothing' %}
             <div class="form-group">
-              
+                <label for="payment">Size</label>
+                <select class="form-control" name="size" id="size">
+                    {% for si in product.product.sizes_dy%}
+                    <option value="{{si}}">{{si}}</option>
+                    {% endfor %}
+                  </select>
+            </div><br>
+            <div class="form-group">
+                <label for="payment">Color</label>
+                <select class="form-control" name="color" id="color">
+                    {% for co in product.product.colors_dy%}
+                    <option value="{{co}}">{{co}}</option>
+                    {% endfor %}
+                  </select>
+            </div><br>
+            {% endif %}
+            <div class="form-group">
+                <label for="payment">Payment</label>
+                <select class="form-control" name="payment" id="payment">
+                    <option value="1">Cash On Delivery</option>
+                    <option value="2">Khalti</option>
+                  </select>
+            </div><br>
+            <div class="form-group">
                 <label for="urgent">Urgent delivery</label>
                 <input type="checkbox" name="urgent" id="urgent" value="True" placeholder="" aria-describedby="helpId"><br>
                 <small id="helpId" class="text-muted">Delivery within 2-3 hour with extra shipping charge (inside valley only)</small>
             </div><br>
-            <input type="submit" value="Confirm Order" class="btn btn-info col-lg-3 float-left">
-            <a href="{% url 'homeapp:cart' %}"><button type="button" class="btn btn-warning float-right">Cancel</button></a>
-          </form>
+            <div class="form-group">
+                <input type="submit" value="Confirm Order" class="btn btn-info float-left">
+                <a href="{% url 'homeapp:cart' %}"><button type="button" class="btn btn-warning float-right">Cancel</button></a>
+            </div>
+        </form>
     </div>
 
 </div>

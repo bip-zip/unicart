@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Location</title>
+</head>
+<body>
+    <h2>Get your location</h2>
+    <button onclick="getLocation()" >Get location</button>
+    <div id='output'></div>
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+    <script >
+        var x =document.getElementById('output');
+
+        function getLocation(){
+            if(navigator.geolocation){
+                navigator.geolocation.getCurrentPosition(showPosition);
+            }else{
+                x.innerHTML='Browser not supporting';
+            }
+            
+        }
+
+        function showPosition(position){
+       
+
+            var locAPI = 'http://maps.googleapis.com/maps/api/geocode/json?latlng='+position.coords.latitude+','+position.coords.longitude+'&sensor=true'
+            x.innerHTML =locAPI;
+
+            $.get({
+                url : locAPI,
+                success: function(data){
+                    console.log(data);
+                    x.innerHTML = data.results[0].address_components[4].long_name+", ";
+                    x.innerHTML += data.results[0].address_components[5].long_name+", ";
+                    x.innerHTML = data.results[0].address_components[6].long_name;
+                }
+            })
+        }
+    </script>
+</body>
+</html>

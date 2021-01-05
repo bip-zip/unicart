@@ -11,6 +11,9 @@ footer{
     color: #fcf7f7;
     background-color: rgb(49, 49, 49);
 }
+.ins-ic,.fb-ic{
+    color:#fcf7f7
+}
 
 
 @media only screen and (max-width: 1081px) {
