@@ -10,9 +10,12 @@ from math import ceil
 from django.urls import reverse, reverse_lazy
 from django.http import JsonResponse
 import requests
+from django.conf import settings
 from django.db.models import Q
 from django.core.paginator import Paginator
-
+from homeapp.middleware_auth import simple_middleware, admin_middleware
+from django.utils.decorators import method_decorator
+from .utils import password_reset_token
 
 class Index(View):
     def post(self, request):
@@ -83,6 +86,7 @@ class SignUp(View):
 
     def validateUser(self, customer):
         error_message = None
+       
         if len(customer.password) < 7:
             error_message = 'Password must be of 8 letters'
 
@@ -94,6 +98,9 @@ class SignUp(View):
 
         elif customer.isExists():
             error_message = 'Phone number already taken !!'
+
+        elif Patron.objects.filter(email=customer.email).exists():
+            error_message = 'Email  already exists !!'
         return error_message
 
 
@@ -107,7 +114,7 @@ class Login(View):
         user = Patron.get_user_by_phone(phone)
         error_message = None
         if user:
-            result = check_password(password, user.cpassword)
+            result = check_password(password, user.password)
             print(result)
             if result == True:
                 request.session['user_id'] = user.id
@@ -146,6 +153,85 @@ def logout(request):
     return redirect('login')
 
 
+class ForgetPassword(View):
+    def get(self, request):
+        return render(request, 'homeapp/forgetpassword.html')
+
+    def post(self, request):
+        useremail= request.POST.get('email')
+        if Patron.objects.filter(email=useremail).exists():
+            url = self.request.META['HTTP_HOST']
+            user=Patron.objects.get(email=useremail)
+            text='Click the link to reset your password. '
+            html_content= url + "/password-reset/" + useremail + \
+                 "/" + password_reset_token.make_token(user) + "/"
+            send_mail(
+                'Password Reset Link | Unicart',
+                text + html_content,
+                settings.EMAIL_HOST_USER,
+                [useremail],
+                fail_silently=False,
+            )
+
+            return render(request, 'homeapp/linksent.html')
+            
+        else:
+            error_message = 'Email does not exists !!'
+            return render(request, 'homeapp/forgetpassword.html', {'error':error_message})
+
+    
+
+
+
+
+class PasswordReset(View):
+    def get(self, request,  *args, **kwargs ):
+        # email=self.kwargs.get('email')
+        # user= Patron.objects.get(email=email)
+        # token=self.kwargs.get('token')
+
+        return render (request, 'homeapp/passwordresetform.html')
+
+    def post(self, request,  *args, **kwargs ):
+        email=self.kwargs.get('email')
+        user= Patron.objects.get(email=email)
+        token=self.kwargs.get('token')
+        
+        if user and password_reset_token.check_token(user, token):
+            password=request.POST.get('password')
+            cpassword=request.POST.get('cpassword')
+            message = self.formValid(password, cpassword)
+
+            if not message:
+                user.password=make_password(password)
+                user.save()
+                return redirect('login')
+            
+            else:
+                return render (request, 'homeapp/passwordresetform.html', {'error':message})
+        
+        
+        
+
+
+    def formValid(self, password, cpassword):
+        error_message = None
+        if len(password) < 7:
+            error_message = 'Password must be of 8 letters'
+
+        elif password != cpassword:
+            error_message = "Password doesn't match !"
+
+        return error_message
+
+        
+
+
+
+
+        
+
+
 def clothhome(request):
     product = SubCat.objects.filter(category=1).order_by('sub_category')
     context = {'products': product}
@@ -156,6 +242,14 @@ def electrohome(request):
     product = SubCat.objects.filter(category=2).order_by('sub_category')
     context = {'products': product}
     return render(request, 'homeapp/electrohome.html', context)
+
+class UserProfile(View):
+    def get(self, request):
+        userid = request.session.get('user_id')
+        customer = Patron.objects.get(id=userid)
+        orders = OrderItems.objects.filter(customer=userid).order_by('-id')
+        context={'user':customer, 'orders':orders}
+        return render(request, 'homeapp/userprofile.html', context)
 
 
 class Producty(View):
@@ -194,6 +288,8 @@ def prodetail(request, pslug):
     if request.method == 'GET':
         data = Product.objects.filter(pslug=pslug)
         pro=Product.objects.get(pslug=pslug)
+        pro.viewcount += 1
+        pro.save()
         cat= SubCat.get_cat(pro.slug.id)
         return render(request, 'homeapp/pdetail.html', {'details': data, 'cat': cat})
     else:
@@ -329,7 +425,8 @@ def order(request, pslug):
         address = request.POST.get('address')
         phone = request.POST.get('phone')
         urgent = request.POST.get('urgent')
-        payment = request.POST.get('payment')
+        paymentid = request.POST.get('payment')
+        payment = PMethod.objects.get(id=paymentid)
         color = request.POST.get('color')
         size = request.POST.get('size')
         customer = request.session.get('user_id')
@@ -338,6 +435,7 @@ def order(request, pslug):
         cart_product = Cart.objects.get(id=pslug)
         product=cart_product.product
         orderitem=product.name
+        ostatus= OrderStatus.objects.get(id=1)
         # product= Product.get_product_by_id(pslug=pslug)
         # products=Product.get_products_by_id(list(cart.keys()))
 
@@ -351,20 +449,20 @@ def order(request, pslug):
             final_price = cart_product.totalprice + 200
             order = OrderItems(customer=Patron(id=customer),
                            product=product, price=final_price, urgentstatus=urgent,quantity=cart_product.quantity,
-                           payment_method=payment, color=color, size=size ,ship=address, phone=phone, payment_completed=False)
+                           pmethod=payment, color=color, size=size ,ship=address, phone=phone, payment_completed=False, orderstatus=ostatus)
             order.save()
         else:
             final_price = cart_product.totalprice + 50
             order = OrderItems(customer=Patron(id=customer),
                            product=product, price=final_price, urgentstatus=urgent,quantity=cart_product.quantity,
-                           payment_method=payment, color=color, size=size ,ship=address, phone=phone, payment_completed=False)
+                           pmethod=payment, color=color, size=size ,ship=address, phone=phone, payment_completed=False, orderstatus=ostatus)
             order.save()
         
         pm = request.POST.get('payment')
 
         
         if urgent:
-            if pm == 'Khalti':
+            if pm == '2':
                 return redirect(reverse('homeapp:khaltirequest') + '?o_id=' + str(order.id))
             message = ('Thank you for ordering ' + orderitem +
                        ' from Unicart. Your product will be shipped within 2-3 hours.')
@@ -373,7 +471,7 @@ def order(request, pslug):
            
                       
         else:
-            if pm == 'Khalti':
+            if pm == '2':
                 return redirect(reverse('homeapp:khaltirequest') + '?o_id=' + str(order.id))
             message = ('Thank you for ordering ' + orderitem +
                        ' from Unicart. Your product will be shipped within 2-3 days.')
@@ -398,13 +496,16 @@ class BuyNow(View):
         cat= SubCat.get_cat(product.slug.id)
         return render(request, 'homeapp/buynow.html', {'product': product,'cat':cat})
 
+    
     def post(self, request, *args, **kwargs):
         pslug= self.kwargs['pslug']
         product= Product.objects.get(id=pslug)
         address = request.POST.get('address')
         phone = request.POST.get('phone')
         urgent = request.POST.get('urgent')
-        payment = request.POST.get('payment')
+        paymentid = request.POST.get('payment')
+        payment = PMethod.objects.get(id=paymentid)
+        ostatus= OrderStatus.objects.get(id=1)
         color = request.POST.get('color')
         size = request.POST.get('size')
         customer = request.session.get('user_id')
@@ -423,20 +524,20 @@ class BuyNow(View):
             final_price = product.price + 200
             order = OrderItems(customer=Patron(id=customer),
                            product=product, price=final_price, urgentstatus=urgent,quantity=1,
-                           payment_method=payment, color=color, size=size ,ship=address, phone=phone, payment_completed=False)
+                           pmethod=payment, color=color, size=size ,ship=address, phone=phone, payment_completed=False, orderstatus=ostatus)
             order.save()
         else:
             final_price = product.price + 50
             order = OrderItems(customer=Patron(id=customer),
                            product=product, price=final_price, urgentstatus=urgent,quantity=1,
-                           payment_method=payment, color=color, size=size ,ship=address, phone=phone, payment_completed=False)
+                           pmethod=payment, color=color, size=size ,ship=address, phone=phone, payment_completed=False, orderstatus=ostatus)
             order.save()
         
         pm = request.POST.get('payment')
 
         
         if urgent:
-            if pm == 'Khalti':
+            if pm == '2':
                 return redirect(reverse('homeapp:khaltirequest') + '?o_id=' + str(order.id))
             message = ('Thank you for ordering ' + orderitem +
                        ' from Unicart. Your product will be shipped within 2-3 hours.')
@@ -445,7 +546,7 @@ class BuyNow(View):
            
                       
         else:
-            if pm == 'Khalti':
+            if pm == '2':
                 return redirect(reverse('homeapp:khaltirequest') + '?o_id=' + str(order.id))
             message = ('Thank you for ordering ' + orderitem +
                        ' from Unicart. Your product will be shipped within 2-3 days.')
@@ -512,6 +613,7 @@ class KhaltiVerifyView(View):
 
 
 class OrderList(View):
+    @method_decorator(simple_middleware)
     def get(self, request):
         customer = request.session.get('user_id')
         orders = OrderItems.objects.filter(customer=customer).order_by('-id')
@@ -532,6 +634,7 @@ class AdminLogin(View):
         usr=authenticate(username=username, password=password)
         error_message = None
         if usr is not None:
+            request.session['admin_id'] =usr.id
             return redirect('homeapp:adminhome')
         
         else:
@@ -543,6 +646,7 @@ class AdminLogin(View):
 
 
 class AdminHome(View):
+    @method_decorator(admin_middleware)
     def get(self, request):
         orders= OrderItems.objects.filter(urgentstatus=None).order_by('-id')
         urgents= OrderItems.objects.filter(urgentstatus=True).order_by('-id')
@@ -551,6 +655,7 @@ class AdminHome(View):
 
 
 class AdminOrderView(View):
+    
     def get(self, request, *args, **kwargs):
         okay=self.kwargs['id']
         order= OrderItems.objects.get(id=okay)
@@ -561,12 +666,83 @@ def changeStatus(request, id):
     if request.method == 'GET':
         order= OrderItems.objects.get(id=id)
         action= request.GET.get('action')
-        if action == "False":
-            order.status = True
+        if action == "1":
+            oid= 2
+            orderid=OrderStatus.objects.get(id=oid)
+            order.orderstatus = orderid
             order.save()
-        elif action == "True":
-            order.status = False
+
+        elif action == "2":
+            oid= 3
+            orderid=OrderStatus.objects.get(id=oid)
+            order.orderstatus = orderid
             order.save()
+
+        elif action == "3":
+            oid= 4
+            orderid=OrderStatus.objects.get(id=oid)
+            order.orderstatus = orderid
+            order.save()
+
+        elif action == "4":
+            oid= 5
+            orderid=OrderStatus.objects.get(id=oid)
+            order.orderstatus = orderid
+            order.save()
+        
+        elif action == "5":
+            oid= 1
+            orderid=OrderStatus.objects.get(id=oid)
+            order.orderstatus = orderid
+            order.save()
+
+            
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
+
+
+
+
+
+
+
+
+def cancelorder(request, id):
+    if request.method == 'GET':
+        order= OrderItems.objects.get(id=id)
+        action= request.GET.get('action')
+        if action == "1":
+            oid= 5
+            orderid=OrderStatus.objects.get(id=oid)
+            order.orderstatus = orderid
+            order.save()
+
+        elif action == "2":
+            oid= 5
+            orderid=OrderStatus.objects.get(id=oid)
+            order.orderstatus = orderid
+            order.save()
+
+        elif action == "3":
+            oid= 5
+            orderid=OrderStatus.objects.get(id=oid)
+            order.orderstatus = orderid
+            order.save()
+
+        elif action == "4":
+            oid= 5
+            orderid=OrderStatus.objects.get(id=oid)
+            order.orderstatus = orderid
+            order.save()
+        
+        elif action == "5":
+            oid= 5
+            orderid=OrderStatus.objects.get(id=oid)
+            order.orderstatus = orderid
+            order.save()
+
+            
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 def bubble(list):

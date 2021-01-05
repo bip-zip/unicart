@@ -29,16 +29,14 @@
                      <p><strong>Quantity: </strong>{{order.quantity}}</p><hr>
                      <p><strong>Total Price: Rs. {{order.price}}/-</strong></p><hr>
                      <p><strong>Urgent Status: </strong>{{order.urgentstatus}}</p>
-                     <p><strong>Payment via: </strong>{{order.payment_method}}</p>
+                     <p><strong>Payment via: </strong>{{order.pmethod.pgateway}}</p>
                      <p><strong>Payment Completed: </strong>{{order.payment_completed}}</p><hr>
                      <div>
-                        {% if order.status %}
-                        <p><strong>Delivery: </strong><small class="badge badge-success">Done.</small></p>
-                        {% else %}
-                        <p><strong>Delivery: </strong><i class="badge badge-primary">On Process.</i></p>
-                        {% endif %}
+                        
+                        <p><strong>Delivery: </strong><small class="badge badge-success">{{order.orderstatus.status}}</small></p>
+                       
                     </div>
-                        <a href="{% url 'homeapp:changests' order.id %}?action={{order.status}}" class="btn btn-primary btn-sm">Change</a>
+                        <a href="{% url 'homeapp:changests' order.id %}?action={{order.orderstatus.id}}" class="btn btn-primary btn-sm">Change</a>
                      
             </div>
         </div>

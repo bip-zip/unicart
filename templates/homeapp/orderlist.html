@@ -30,7 +30,7 @@
                 <tr>
                     <td>{{forloop.counter}}.</td>
                     <td><img style="height: 70px;" class="rounded-circle" src="{{order.product.imageUrl}}" alt="product Image"></td>
-                    <td>{{order.product.name}}</td>
+                    <td><a href="{% url 'homeapp:prodetail' pslug=order.product.pslug %}">{{order.product.name}}</a></td>
                     <td>{{order.date}}</td>
                     {% if order.urgentstatus %}
                     <td style="text-align: center;"><small class="badge badge-success">yes</small></td>
@@ -40,18 +40,23 @@
                     <td>{{order.product.price}}</td>
                     <td style="text-align: center;">{{order.quantity}}</td>
                     <td style="text-align: center;">Rs. {{order.price}}</td>
-                    <td style="text-align: center;">{{order.payment_method}}</td>
+                    <td style="text-align: center;">{{order.pmethod.pgateway}}</td>
                     {% if order.payment_completed %}
                     <td><small >✔</small></td>
                     {% else %}
                     <td><small >❌</small></td>
                     {% endif %}
 
-                    {% if order.status %}
-                    <td><small class="badge badge-success">Delivered</small></td>
+                    
+                    <td><small class="badge badge-success">{{order.orderstatus.status}}</small></td>
+                    {% if order.orderstatus.id == 4 %}
+                    <td><a href="{% url 'homeapp:cancelorder' order.id %}?action={{order.orderstatus.id}}" class="btn btn-primary btn-sm disabled">Cancel Order</a></td>
+                    {% elif not order.orderstatus.id == 5 %}
+                    <td><a href="{% url 'homeapp:cancelorder' order.id %}?action={{order.orderstatus.id}}" class="btn btn-primary btn-sm ">Cancel Order</a></td>
                     {% else %}
-                    <td><small class="badge badge-warning">Not Delivered</small></td>
+                    <td><a href="{% url 'homeapp:cancelorder' order.id %}?action={{order.orderstatus.id}}" class="btn btn-success btn-sm disabled">Cancelled</a></td>
                     {% endif %}
+                    
                 </tr>
                 {% endfor %}
             </tbody>

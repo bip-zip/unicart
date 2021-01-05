@@ -51,7 +51,9 @@
               <a class="nav-link dropdown" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <p id='user'><i class="fa fa-user-circle" aria-hidden="true"></i>  <strong>{{request.session.username}}</strong></p>
               </a>
+              
               <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="{% url 'homeapp:userprofile' %}">Profile</a>
                 <a class="dropdown-item" href="{% url 'homeapp:logout' %}">Logout</a>
               </div>
             </li>
@@ -91,10 +93,10 @@
     <div class="row">
       <div class="col-md-12 py-5">
         <div class="mb-5 flex-center">
-          <a class="fb-ic">
+          <a class="fb-ic" href="https://www.facebook.com/Yologuys-Nepal-103122431737249" target="_blank">
             <i class="fab fa-facebook-f fa-lg white-text mr-md-5 mr-3 fa-2x"> </i>
           </a>
-          <a class="ins-ic">
+          <a class="ins-ic"  href="https://www.facebook.com/Yologuys-Nepal-103122431737249" target="_blank">
             <i class="fab fa-instagram fa-lg white-text mr-md-5 mr-3 fa-2x"> </i>
           </a>
           <!-- Load Facebook SDK for JavaScript -->

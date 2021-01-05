@@ -16,7 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path,include
 from homeapp import views
-from homeapp.views import Producty, SignUp, Login, OrderList, Index, KhaltiRequestView, KhaltiVerifyView, CartManage, BuyNow, AdminLogin, AdminHome, AdminOrderView
+from homeapp.views import Producty, SignUp, Login, OrderList, Index, KhaltiRequestView, KhaltiVerifyView, CartManage, BuyNow, AdminLogin, AdminHome, AdminOrderView, ForgetPassword,PasswordReset, UserProfile
 
 from django.conf.urls.static import static
 from django.conf import settings
@@ -30,6 +30,9 @@ urlpatterns = [
     path('signup/', SignUp.as_view(), name='signup'),
     path('login/', Login.as_view(), name='login'),
     path ('logout/', include('homeapp.urls')),
+
+    path('forget-password/', ForgetPassword.as_view(), name='forgetpassword'),
+    path('password-reset/<email>/<token>/', PasswordReset.as_view(), name='passwordreset'),
     path('cloth/', views.clothhome, name='clothhome'),
     path('cart/', views.cart, name='cart'),
     path('manage-cart/<int:product_id>/', CartManage.as_view(), name='cartmanage'), 
@@ -39,17 +42,19 @@ urlpatterns = [
     path ('electronics/', include('homeapp.urls')),
     path('product/',Producty.as_view() ,name='product'),
     path ('product-detail/', include('homeapp.urls')),
-    path ('order/', include('homeapp.urls')),
+    path('order/<int:pslug>/', views.order, name='order'),
     path('buynow/<int:pslug>/',BuyNow.as_view() ,name='buynow'),
 
     path('khalti-request/', KhaltiRequestView.as_view(), name='khaltirequest' ),
     path('khalti-verify/', KhaltiVerifyView.as_view(), name='khaltiverify' ),
 
-    path('orderlist/', simple_middleware(OrderList.as_view()), name='orderlist'),
+    path('orderlist/', OrderList.as_view(), name='orderlist'),
+    path('userprofile/', UserProfile.as_view(), name='userprofile'),
     path('adminlogin/', AdminLogin.as_view(), name='adminlogin' ),
     path('adminhome/', AdminHome.as_view(), name='adminhome' ),
     path('adminorder/<int:id>/', AdminOrderView.as_view(), name='adminorder' ),
     path('changests/<int:id>/', views.changeStatus, name='changests'),
+    path('cancelorder/<int:id>/', views.cancelorder, name='cancelorder'),
 
 
 

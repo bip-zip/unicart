@@ -25,7 +25,8 @@ class Patron(models.Model):
     password=models.CharField(max_length=600)
     cpassword=models.CharField(max_length=600, null=True)
     address=models.CharField(max_length=100, null=True)
-
+    last_login = models.DateTimeField('last_login', auto_now=True)
+    
     def __str__(self):
         return self.firstname
 
@@ -165,6 +166,7 @@ class Product(models.Model):
     crossprice=models.FloatField(null=True)
     colors=models.CharField(null=True,blank=True, max_length=100)
     size=models.CharField(null=True, blank=True, max_length=30)
+    viewcount=models.PositiveIntegerField(null=True, default=1)
 
 
     def __str__(self):
@@ -274,7 +276,19 @@ class Cart(models.Model):
 
         return -1
 
- 
+class PMethod(models.Model):
+    pgateway=models.CharField(max_length=20, null=True)
+
+    def __str__(self):
+        return self.pgateway
+
+class OrderStatus(models.Model):
+    status=models.CharField(max_length=15, null=True)
+
+    def __str__(self):
+        return self.status
+
+
 
 class OrderItems(models.Model):
     product= models.ForeignKey(Product,on_delete=models.SET_NULL, blank=True, null=True)
@@ -286,11 +300,14 @@ class OrderItems(models.Model):
     urgentstatus=models.BooleanField(default=False, null=True)
     ship=models.CharField(max_length=200, null=True)
     phone= models.CharField(max_length=20, null=True)
-    status=models.BooleanField(default=False)
-    payment_method= models.CharField(max_length=20, null=True)
+    orderstatus=models.ForeignKey(OrderStatus, on_delete=models.SET_NULL, blank=True, null=True)
+    pmethod=models.ForeignKey(PMethod, on_delete=models.SET_NULL, blank=True, null=True)
     payment_completed= models.BooleanField(default=False, null=True, blank=True)
     size= models.CharField(max_length=5, null=True)
     color= models.CharField(max_length=10, null=True)
+
+    def __str__(self):
+        return str(self.id)
 
 
 
