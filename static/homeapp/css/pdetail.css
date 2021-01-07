@@ -169,3 +169,29 @@ body {
               transform: scale(1); } }
   
   /*# sourceMappingURL=style.css.map */
+
+  .commentform input[type=text]{
+    background-color: rgb(243, 240, 240);
+    color: black;
+    border:none;
+    border-radius: 4px;
+    height: 40px;
+    width: 70%;
+  }
+
+  .cdate p{
+    font-size: 12px;
+    margin-top:-15px ;
+    
+  }
+
+  .creview p{
+    font-size: 15px;
+    margin-top:-10px ;
+    margin-bottom:5px ;
+  
+    
+  }
+  .com{
+    background-color: rgb(226, 224, 224);
+  }

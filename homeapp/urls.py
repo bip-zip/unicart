@@ -1,7 +1,7 @@
 from django.conf.urls import url
 from . import views
 from django.urls import path,include
-from .views import Producty, Login, SignUp, Search, OrderList, Index, KhaltiRequestView, CartManage, KhaltiVerifyView,BuyNow, AdminHome,AdminOrderView, ForgetPassword,PasswordReset, UserProfile
+from .views import Producty, Login, SignUp, Search, OrderList, Index, KhaltiRequestView, CartManage, KhaltiVerifyView,BuyNow, AdminHome,AdminOrderView, ForgetPassword,PasswordReset, UserProfile,proDetail
 from .middleware_auth import simple_middleware
 
 
@@ -21,7 +21,7 @@ urlpatterns=[
     path('search/', Search.as_view(), name='search'),
     path('search', Search.as_view(), name='search'),
     path('product/<int:slug>', Producty.as_view(), name='product'),
-    path('product-detail/<str:pslug>/', views.prodetail, name='prodetail'),
+    path('product-detail/<str:pslug>/', proDetail.as_view(), name='prodetail' ),
     path('cart/', views.cart, name='cart'),
     path('manage-cart/<int:product_id>/', CartManage.as_view(), name='cartmanage'), 
     path('order/<int:pslug>/', views.order, name='order'),
