@@ -39,7 +39,7 @@ class Index(View):
         advertise = Advertise.objects.order_by('created_at')
         data = {'no_of_slides': nSlides, 'onsale_length': range(nSlides), 'newarrivals_length': range(
             rSlides), 'onsale': onsale, 'newarrivals': newarrivals, 'advertise': advertise}
-        return render(request, 'homeapp/index.html', data)
+        return render(request, 'homeapp/index_copy.html', data)
 
 
 class SignUp(View):
@@ -284,22 +284,81 @@ class Producty(View):
         return render(request, 'homeapp/product.html', {'products': dhakal, 'genders': genders, 'subcat': subcat, 'cat': cat})
 
 
-def prodetail(request, pslug):
-    if request.method == 'GET':
+# def prodetail(request, pslug):
+#     if request.method == 'GET':
+#         data = Product.objects.filter(pslug=pslug)
+#         pro=Product.objects.get(pslug=pslug)
+#         pro.viewcount += 1
+#         pro.save()
+#         cat= SubCat.get_cat(pro.slug.id)
+#         reviews= Comment.objects.filter(product=pro).order_by("-id")
+
+#         return render(request, 'homeapp/pdetail.html', {'details': data, 'cat': cat, 'reviews': reviews})
+#     else:
+#         if request.session.get('user_id'):
+#             pslugo = request.POST.get('data')
+#             comment = request.POST.get('comment')
+#             prod=Product.objects.get(pslug=pslug)
+#             customer = request.session.get('user_id')
+#             patron= Patron.objects.get(id=customer)
+#             review= Comment(product=prod, customer=patron, review=comment )
+            
+#             if comment== "":
+#                 return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+#             else:
+#                 review.save()
+#                 return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+#             return get_cart_items(request, pslugo)
+#         else:
+#             return redirect('login')
+
+#         return HttpResponseRedirect(self.request.path_info)
+
+
+
+
+
+
+
+class proDetail(View):
+    def get(self,request,pslug):
         data = Product.objects.filter(pslug=pslug)
         pro=Product.objects.get(pslug=pslug)
         pro.viewcount += 1
         pro.save()
         cat= SubCat.get_cat(pro.slug.id)
-        return render(request, 'homeapp/pdetail.html', {'details': data, 'cat': cat})
-    else:
+        reviews= Comment.objects.filter(product=pro).order_by("-id")
+
+        return render(request, 'homeapp/pdetail.html', {'details': data, 'cat': cat, 'reviews': reviews})
+
+
+
+    def post(self, request, pslug):
         if request.session.get('user_id'):
-            pslug = request.POST.get('data')
-            return get_cart_items(request, pslug)
+            if request.POST.get('data'):
+                pslugo = request.POST.get('data')
+                get_cart_items(request, pslugo)
+
+            else:
+                comment = request.POST.get('comment')
+                prod=Product.objects.get(pslug=pslug)
+                customer = request.session.get('user_id')
+                patron= Patron.objects.get(id=customer)
+                review= Comment(product=prod, customer=patron, review=comment )
+
+                if comment== "" or len(comment) >= 200:
+                    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+                else:
+                    review.save()
+                    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+            
         else:
-            return redirect('cart')
+            return redirect('login')
 
         return HttpResponseRedirect(self.request.path_info)
+
+
+
 
 
 def cart(request):
@@ -491,11 +550,13 @@ def order(request, pslug):
         return render(request, 'homeapp/order.html', {'product': product, 'cat':cat})
 class BuyNow(View):
     def get(self, request, *args, **kwargs):
-        pslug= self.kwargs['pslug']
-        product= Product.objects.get(id=pslug)
-        cat= SubCat.get_cat(product.slug.id)
-        return render(request, 'homeapp/buynow.html', {'product': product,'cat':cat})
-
+        if request.session.get('user_id'):
+            pslug= self.kwargs['pslug']
+            product= Product.objects.get(id=pslug)
+            cat= SubCat.get_cat(product.slug.id)
+            return render(request, 'homeapp/buynow.html', {'product': product,'cat':cat})
+        else:
+            return redirect('homeapp:login')
     
     def post(self, request, *args, **kwargs):
         pslug= self.kwargs['pslug']
@@ -634,7 +695,10 @@ class AdminLogin(View):
         usr=authenticate(username=username, password=password)
         error_message = None
         if usr is not None:
+            request.session.clear()
             request.session['admin_id'] =usr.id
+            request.session['username'] =usr.username
+
             return redirect('homeapp:adminhome')
         
         else:

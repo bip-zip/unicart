@@ -145,7 +145,72 @@ body .carousel-indicators {
 }
 
 
+.wrapper{
+    width: 100%;
+    height: auto;
+    overflow: hidden;
+}
+.item{
+    width: auto;
+    overflow: hidden;
+}
+.item img{
+    border-radius: 5px;
+}
 
+.detail{
+    position: absolute;
+    z-index: 111;
+    top: 10px;
+    left: 39px;
+    text-align: center;
+    
+    display: none;
+
+    
+}
+.detail h6{
+    color:#ffffff;
+}
+.detail p{
+    font-size: 17px;
+    font-weight: bold;
+    color:#ffffff;
+
+}
+.detail .card-title{
+    margin-bottom:20px ;
+}
+.item:hover{
+    box-shadow: hsl(0, 0%, 80%) 0 0 16px;
+    
+    border-radius: 8px;
+    background-color: black;
+   
+}
+
+.item:hover img{
+    opacity: 0.3;
+    transition: opacity 0.5s;
+    -webkit-transition: opacity 0.5s;
+   
+}
+
+
+.item:hover>.detail{
+    display: block;
+    transition: opacity 0.4s;
+    -webkit-transition: opacity 0.4s;
+   
+}
+
+@media only screen and (max-width: 600px) {
+    .detail{
+        left: 10px;
+        
+    }
+
+};
 
 
 

@@ -16,7 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path,include
 from homeapp import views
-from homeapp.views import Producty, SignUp, Login, OrderList, Index, KhaltiRequestView, KhaltiVerifyView, CartManage, BuyNow, AdminLogin, AdminHome, AdminOrderView, ForgetPassword,PasswordReset, UserProfile
+from homeapp.views import Producty, SignUp, Login, OrderList, Index, KhaltiRequestView, KhaltiVerifyView, CartManage, BuyNow, AdminLogin, AdminHome, AdminOrderView, ForgetPassword,PasswordReset, UserProfile, proDetail
 
 from django.conf.urls.static import static
 from django.conf import settings
@@ -41,7 +41,9 @@ urlpatterns = [
     path ('search/search', include('homeapp.urls')),
     path ('electronics/', include('homeapp.urls')),
     path('product/',Producty.as_view() ,name='product'),
-    path ('product-detail/', include('homeapp.urls')),
+  
+    path('product-detail/<str:pslug>/', proDetail.as_view(), name='prodetail' ),
+    
     path('order/<int:pslug>/', views.order, name='order'),
     path('buynow/<int:pslug>/',BuyNow.as_view() ,name='buynow'),
 

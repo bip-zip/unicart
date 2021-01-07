@@ -38,7 +38,7 @@
             <li class="nav-item"><img id='slog' src="{% static 'homeapp/pics/slog.png' %}" alt=""></li>
           </ul>
           <ul class="navbar-nav mr-right">
-          {% if request.session.user_id %}
+          {% if request.session.admin_id %}
             <li class="nav-item dropdown">
               <a class="nav-link dropdown" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <p id='user'><i class="fa fa-user-circle" aria-hidden="true"></i>  <strong>{{request.session.username}}</strong></p>

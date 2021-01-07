@@ -1,5 +1,5 @@
 from django.contrib import admin
-from homeapp.models import Patron, Cat,SubCat,Gen,Product,Cart,OrderItems, Color, Size, Advertise, Admin, OrderStatus,PMethod
+from homeapp.models import Patron, Cat,SubCat,Gen,Product,Cart,OrderItems, Color, Size, Advertise, Admin, OrderStatus,PMethod,Comment
 
 # admin.site.register(Patron)
 # admin.site.register(Cat)
@@ -13,6 +13,6 @@ from homeapp.models import Patron, Cat,SubCat,Gen,Product,Cart,OrderItems, Color
 # admin.site.register(Advertise)
 # admin.site.register(Admin)
 
-admin.site.register([Patron, Cat,SubCat,Gen,Product,Cart,OrderItems, Color, Size, Advertise, Admin,OrderStatus,PMethod])
+admin.site.register([Patron, Cat,SubCat,Gen,Product,Cart,OrderItems, Color, Size, Advertise, Admin,OrderStatus,PMethod, Comment])
 
 

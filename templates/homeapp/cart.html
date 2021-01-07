@@ -30,7 +30,7 @@
                     <tr id='{{product.id}}'>
                         <td>{{forloop.counter}}.</td>
                         <td><img class="rounded-circle" src="{{product.product.imageUrl}}" alt="product Image"></td>
-                        <td>{{product.product.name}}</td>
+                        <td><a href="{% url 'homeapp:prodetail' pslug=product.product.pslug %}">{{product.product.name}}</a></td>
                         <td>Rs. {{product.product.price}}</td>
                         <td>{{product.quantity}}</td>
                         {% comment %} <td class="text-center">Rs. {{product.quantity|multiply:product.product.price}}</td> {% endcomment %}
@@ -110,6 +110,7 @@
     </nav>
 </div>
 
+</div>
 </div>
 </div>
 {% endblock %}

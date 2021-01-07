@@ -309,6 +309,19 @@ class OrderItems(models.Model):
     def __str__(self):
         return str(self.id)
 
+class Comment(models.Model):
+    product= models.ForeignKey(Product,on_delete=models.SET_NULL, blank=True, null=True)
+    customer= models.ForeignKey(Patron, on_delete=models.SET_NULL, blank=True, null=True)
+    review= models.CharField(null=True, max_length=200)
+    date = models.DateField(default=datetime.datetime.now(), null=True)
+
+
+    def __str__(self):
+        return str(self.product)
+
+
+
+
 
 
 
